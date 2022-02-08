@@ -15,25 +15,43 @@ const typeDefs = gql`
     }
 `;
 
-const giorgio = {
+type Person = {
+  givenName: string
+  familyName: string
+  yearOfBirth: number
+  friends: Person[]
+}
+
+const giorgio: Person = {
   givenName: 'Giorgio',
   familyName: 'Acquati',
   yearOfBirth: 1996,
   friends: []
 }
 
-const frengo = {
+const frengo: Person = {
   givenName: 'Francesco',
   familyName: 'Francomano',
   yearOfBirth: 1962,
   friends: []
 }
 
+
+const bergo: Person = {
+  givenName: 'Simone',
+  familyName: 'Bergo',
+  yearOfBirth: 1994,
+  friends: [],
+}
+
 giorgio.friends.push(frengo)
 frengo.friends.push(giorgio)
 
+giorgio.friends.push(bergo)
+bergo.friends.push(giorgio)
+
 const peopleData = [
-  giorgio, frengo
+  giorgio, frengo, bergo
 ]
 
 const resolvers = {
@@ -45,11 +63,11 @@ const resolvers = {
       let result = peopleData
 
       if (args.familyName !== undefined) {
-        result = result.filter(person => person.familyName === args.familyName)
+        result = result.filter((person: Person) => person.familyName === args.familyName)
       }
 
       if (args.givenName !== undefined) {
-        result = result.filter(person => person.givenName === args.givenName)
+        result = result.filter((person: Person) => person.givenName === args.givenName)
       }
 
       return result
@@ -57,8 +75,8 @@ const resolvers = {
   },
 
   Person: {
-    age: parent => 2022 - parent.yearOfBirth,
-    fullName: parent => `${parent.givenName} ${parent.familyName}`
+    age: (parent: Person) => 2022 - parent.yearOfBirth,
+    fullName: (parent: Person) => `${parent.givenName} ${parent.familyName}`
   }
 }
 
